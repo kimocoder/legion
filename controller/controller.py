@@ -166,7 +166,7 @@ class Controller():
         
     def getRunningProcesses(self):
         return self.processes
-            
+
     def getHostActions(self):
         return self.settings.hostActions
         
@@ -219,7 +219,8 @@ class Controller():
 
         if scanMode == 'Easy':
             if runStagedNmap:
-                self.runStagedNmap(targetHosts, runHostDiscovery)
+                log.info(" nmap speed is " + str(nmapSpeed))
+                self.runStagedNmap(targetHosts, runHostDiscovery, nmapSpeed)
             elif runHostDiscovery:
                 outputfile = self.logic.runningfolder + "/nmap/" + getTimestamp() + '-host-discover'
                 command = "nmap -n -sV -O --version-light -T" + str(nmapSpeed) + " " + targetHosts + " -oA "+outputfile
@@ -674,7 +675,7 @@ class Controller():
         return qProcess.pid()
 
     # recursive function used to run nmap in different stages for quick results
-    def runStagedNmap(self, targetHosts, discovery = True, stage = 1, stop = False):
+    def runStagedNmap(self, targetHosts, discovery = True, nmapSpeed = "4", stage = 1, stop = False):
         log.info("runStagedNmap called for stage {0}".format(str(stage)))
         if not stop:
             textbox = self.view.createNewTabForHost(str(targetHosts), 'nmap (stage '+str(stage)+')', True)
@@ -693,7 +694,11 @@ class Controller():
             command = "nmap "
             if not discovery:                                           # is it with/without host discovery?
                 command += "-Pn "
-            command += "-T4 -sC "
+
+            ##nmap speed logic
+            command += " -T" + str(nmapSpeed)
+            command += " -sC "
+
             if not stage == 1 and not stage == 3:
                 command += "-n "                                        # only do DNS resolution on first stage
             if os.geteuid() == 0:                                       # if we are root we can run SYN + UDP scans
