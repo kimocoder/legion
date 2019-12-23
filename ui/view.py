@@ -16,32 +16,24 @@ Copyright (c) 2018 GoVanguard
     If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys, os, ntpath, signal, re  # for file operations, to kill processes and for regex
-
-from PyQt5.QtCore import *                                              # for filters dialog
-from PyQt5 import QtCore
-from PyQt5 import QtWidgets, QtGui, QtCore
+import ntpath  # for file operations, to kill processes and for regex
 
 from app.ApplicationInfo import applicationInfo, getVersion
-from app.shell.Shell import Shell
-from app.timing import getTimestamp
 from ui.ViewHeaders import serviceTableHeaders, hostTableHeaders, processTableHeaders, toolHostsTableHeaders, \
     scriptsTableHeaders, toolsTableHeaders, cvesTableHeaders, serviceNamesTableHeaders
 from ui.ViewState import ViewState
-from ui.gui import *
 from ui.dialogs import *
 from ui.settingsDialog import *
 from ui.configDialog import *
 from ui.helpDialog import *
 from ui.addHostDialog import *
 from ui.ancillaryDialog import *
-from app.hostmodels import *
-from app.servicemodels import *
-from app.scriptmodels import *
-from app.cvemodels import *
-from app.processmodels import *
+from ui.models.hostmodels import *
+from ui.models.servicemodels import *
+from ui.models.scriptmodels import *
+from ui.models.cvemodels import *
+from ui.models.processmodels import *
 from app.auxiliary import *
-import time #temp
 from six import u as unicode
 import pandas as pd
 
