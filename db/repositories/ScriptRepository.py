@@ -15,7 +15,7 @@ Copyright (c) 2018 GoVanguard
 
 Author(s): Dmitriy Dubson (d.dubson@gmail.com)
 """
-from db.database import Database
+from db.SqliteDbAdapter import Database
 
 
 class ScriptRepository:
