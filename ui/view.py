@@ -19,10 +19,11 @@ Copyright (c) 2018 GoVanguard
 import ntpath  # for file operations, to kill processes and for regex
 
 from app.ApplicationInfo import applicationInfo, getVersion
+from app.timing import getTimestamp
 from ui.ViewHeaders import serviceTableHeaders, hostTableHeaders, processTableHeaders, toolHostsTableHeaders, \
     scriptsTableHeaders, toolsTableHeaders, cvesTableHeaders, serviceNamesTableHeaders
 from ui.ViewState import ViewState
-from ui.dialogs import *
+from ui.dialogs.FiltersDialog import FiltersDialog
 from ui.settingsDialog import *
 from ui.configDialog import *
 from ui.helpDialog import *
@@ -36,6 +37,10 @@ from ui.models.processmodels import *
 from app.auxiliary import *
 from six import u as unicode
 import pandas as pd
+
+from ui.widgets.BruteWidget import BruteWidget
+from ui.widgets.HostInformationWidget import HostInformationWidget
+
 
 # this class handles everything gui-related
 class View(QtCore.QObject):

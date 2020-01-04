@@ -15,11 +15,6 @@ Copyright (c) 2018 GoVanguard
     You should have received a copy of the GNU General Public License along with this program.
     If not, see <http://www.gnu.org/licenses/>.
 """
-
-from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtGui import QColor
-
-from ui.dialogs import *                                                # for the screenshots (image viewer)
 from ui.ancillaryDialog import *
 from utilities.qtLogging import *
 
