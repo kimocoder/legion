@@ -3,7 +3,14 @@ checks:
   method-count:
     config:
       threshold: 50
+  method-lines:
+    config:
+      threshold: 50
+  file-lines:
+    config:
+      threshold: 400
 exclude_patterns:
+  - "tests/"
   - "parsers/examples/"
   - "debian/"
   - "deps/"

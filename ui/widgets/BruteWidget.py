@@ -20,6 +20,8 @@ from PyQt5.QtWidgets import QPushButton, QWidget, QLabel, QLineEdit, QRadioButto
     QHBoxLayout, QFileDialog, QCheckBox, QComboBox, QButtonGroup
 
 from app.timing import getTimestamp
+from app.tools.hydra.HydraCommandBuilder import HydraCommandArguments, buildHydraCommand
+from app.tools.hydra.HydraPaths import getHydraOutputFileName
 
 
 class BruteWidget(QWidget):
@@ -335,64 +337,46 @@ class BruteWidget(QWidget):
             self.passListRadio.toggle()
 
     def buildHydraCommand(self, runningfolder, userlistPath, passlistPath):
-
         self.ip = self.ipTextinput.text()
         self.port = self.portTextinput.text()
         self.service = str(self.serviceComboBox.currentText())
-        self.command = "hydra " + str(self.ip) + " -s " + self.port + " -o "
-        self.outputfile = runningfolder + "/hydra/" + getTimestamp() + \
-                          "-" + str(self.ip) + "-" + self.port + "-" + self.service + ".txt"
-        self.command += "\"" + self.outputfile + "\""
+        outputFile = getHydraOutputFileName(runningfolder, self.ip, self.port, self.service)
+        threadsToUse = str(self.threadsComboBox.currentText())
+        labelText = str(self.labelPath.text()) if self.checkAddMoreOptions.isChecked() else None
 
         if 'form' not in str(self.service):
             self.warningLabel.hide()
 
+        tryLoginName = None
+        tryLoginNameFile = None
         if not self.service in self.settings.brute_no_username_services.split(","):
             if self.singleUserRadio.isChecked():
-                self.command += " -l " + self.usersTextinput.text()
+                tryLoginName = self.usersTextinput.text()
             elif self.foundUsersRadio.isChecked():
-                self.command += " -L \"" + userlistPath + "\""
+                tryLoginNameFile = userlistPath
             else:
-                self.command += " -L \"" + self.userlistTextinput.text() + "\""
+                tryLoginNameFile = self.userlistTextinput.text()
 
+        tryPassword = None
+        tryPasswordFile = None
         if not self.service in self.settings.brute_no_password_services.split(","):
             if self.singlePassRadio.isChecked():
-                escaped_password = self.passwordsTextinput.text().replace('"', '\"\"\"')
-                self.command += " -p \"" + escaped_password + "\""
-
+                tryPassword = self.passwordsTextinput.text().replace('"', '\"\"\"')
             elif self.foundPasswordsRadio.isChecked():
-                self.command += " -P \"" + passlistPath + "\""
+                tryPasswordFile = passlistPath
             else:
-                self.command += " -P \"" + self.passlistTextinput.text() + "\""
+                tryPasswordFile = self.passlistTextinput.text()
 
-        if self.checkBlankPass.isChecked():
-            self.command += " -e n"
-            if self.checkLoginAsPass.isChecked():
-                self.command += "s"
-
-        elif self.checkLoginAsPass.isChecked():
-            self.command += " -e s"
-
-        if self.checkLoopUsers.isChecked():
-            self.command += " -u"
-
-        if self.checkExitOnValid.isChecked():
-            self.command += " -f"
-
-        if self.checkVerbose.isChecked():
-            self.command += " -V"
-
-        self.command += " -t " + str(self.threadsComboBox.currentText())
-
-        self.command += " " + self.service
-
-        #       if self.labelPath.isVisible():  # append the additional field's content, if it was visible
-        if self.checkAddMoreOptions.isChecked():
-            self.command += " " + str(self.labelPath.text())  # TODO: sanitise this?
-
-        # command = "echo "+escaped_password+" > /tmp/hydra-sub.txt"
-        # os.system(unicode(command))
-        return self.command
+        hydraArgs = HydraCommandArguments(ipAddress=str(self.ip), port=self.port, outputFile=outputFile,
+                                          threadsToUse=threadsToUse, service=self.service,
+                                          verbose=self.checkVerbose.isChecked(), label=labelText,
+                                          exitAfterFirstUserPassPairFound=self.checkExitOnValid.isChecked(),
+                                          loopUsers=self.checkLoopUsers.isChecked(),
+                                          tryLoginAsPass=self.checkLoginAsPass.isChecked(),
+                                          tryNullPassword=self.checkBlankPass.isChecked(),
+                                          tryPassword=tryPassword, tryPasswordFile=tryPasswordFile,
+                                          tryLoginName=tryLoginName, tryLoginNameFile=tryLoginNameFile)
+        return buildHydraCommand(hydraArgs)
 
     def getPort(self):
         return self.port

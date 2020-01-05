@@ -1603,7 +1603,7 @@ class View(QtCore.QObject):
             bWidget.toggleRunButton()
             bWidget.resetDisplay()                                      # fixes tab bug
             
-            hydraCommand = bWidget.buildHydraCommand(self.controller.getRunningFolder(),
+            hydraCommand = bWidget. buildHydraCommand(self.controller.getRunningFolder(),
                                                      self.controller.getUserlistPath(),
                                                      self.controller.getPasslistPath())
             bWidget.setObjectName(str("hydra"+" ("+bWidget.getPort()+"/tcp)"))
