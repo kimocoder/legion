@@ -1,6 +1,6 @@
 """
 LEGION (https://govanguard.io)
-Copyright (c) 2018 GoVanguard
+Copyright (c) 2020 GoVanguard
 
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
@@ -15,16 +15,16 @@ Copyright (c) 2018 GoVanguard
 
 Author(s): Dmitriy Dubson (d.dubson@gmail.com)
 """
-from db.SqliteDbAdapter import Database
+
+import unittest
+from unittest.mock import patch
+
+from app.tools.hydra.HydraPaths import getHydraOutputFileName
 
 
-class CVERepository:
-    def __init__(self, dbAdapter: Database):
-        self.dbAdapter = dbAdapter
-
-    def getCVEsByHostIP(self, hostIP):
-        query = ('SELECT cves.name, cves.severity, cves.product, cves.version, cves.url, cves.source, '
-                 'cves.exploitId, cves.exploit, cves.exploitUrl FROM cve AS cves '
-                 'INNER JOIN hostObj AS hosts ON hosts.id = cves.hostId '
-                 'WHERE hosts.ip = ?')
-        return self.dbAdapter.metadata.bind.execute(query, str(hostIP)).fetchall()
+class HydraPathsTest(unittest.TestCase):
+    @patch("app.timing.getTimestamp")
+    def test_getHydraPathOutputFileName(self, getTimestamp):
+        getTimestamp.return_value = "20200101"
+        expected = "runningfolder/hydra/20200101-192.168.1.1-22-someservice.txt"
+        self.assertEqual(expected, getHydraOutputFileName("runningfolder", "192.168.1.1", "22", "someservice"))

@@ -35,6 +35,7 @@ except:
 from app.logic import *
 from app.settings import *
 
+log = getAppLogger()
 
 class Controller:
 

@@ -1,6 +1,6 @@
 """
 LEGION (https://govanguard.io)
-Copyright (c) 2018 GoVanguard
+Copyright (c) 2020 GoVanguard
 
     This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
     License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
@@ -15,16 +15,8 @@ Copyright (c) 2018 GoVanguard
 
 Author(s): Dmitriy Dubson (d.dubson@gmail.com)
 """
-from db.SqliteDbAdapter import Database
 
 
-class CVERepository:
-    def __init__(self, dbAdapter: Database):
-        self.dbAdapter = dbAdapter
-
-    def getCVEsByHostIP(self, hostIP):
-        query = ('SELECT cves.name, cves.severity, cves.product, cves.version, cves.url, cves.source, '
-                 'cves.exploitId, cves.exploit, cves.exploitUrl FROM cve AS cves '
-                 'INNER JOIN hostObj AS hosts ON hosts.id = cves.hostId '
-                 'WHERE hosts.ip = ?')
-        return self.dbAdapter.metadata.bind.execute(query, str(hostIP)).fetchall()
+def getHydraOutputFileName(runningFolder: str, ipAddress: str, port: str, service: str) -> str:
+    from app.timing import getTimestamp
+    return f"{runningFolder}/hydra/{getTimestamp()}-{ipAddress}-{port}-{service}.txt"
