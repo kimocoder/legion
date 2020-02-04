@@ -1503,15 +1503,9 @@ class View(QtCore.QObject):
             bWidget.toggleRunButton()
             bWidget.resetDisplay()                                      # fixes tab bug
             
-<<<<<<< HEAD
-            hydraCommand = bWidget. buildHydraCommand(self.controller.getRunningFolder(),
-                                                     self.controller.getUserlistPath(),
-                                                     self.controller.getPasslistPath())
-=======
             hydraCommand = bWidget.buildHydraCommand(self.controller.getRunningFolder(), self.controller.getUserlistPath(), self.controller.getPasslistPath())      
->>>>>>> d3088bb9b791e6307475440ee2ab41983a61def7
             bWidget.setObjectName(str("hydra"+" ("+bWidget.getPort()+"/tcp)"))
-            
+
             hosttabs = []                                               # add widget to host tabs (needed to be able to move the widget between brute/tools tabs)
             if str(bWidget.ip) in self.hostTabs:
                 hosttabs = self.hostTabs[str(bWidget.ip)]
